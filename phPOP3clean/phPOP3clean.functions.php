@@ -189,7 +189,7 @@ function preg_expression($expression, $options='') {
 }
 define('PHPOP3CLEAN_HTTPDOMAIN',  '(f|ht)tps?:[/\\\\]{1,2}(([a-z0-9]+:)?[a-z0-9]+@)?([a-z0-9'.preg_quote('_&|[]<>%*!').'\\.\\-]+)');
 define('PHPOP3CLEAN_EMAILDOMAIN', '([0-9a-z_\\.]+)@(([a-z0-9\\.\\-]+\\.)+([a-z]{2,4}))[^a-z0-9]');
-define('PHPOP3CLEAN_OBFUSPACE', '[-–—`\'\\+\\.,;\\*~…_\\s]');
+define('PHPOP3CLEAN_OBFUSPACE', '[-ï¿½ï¿½`\'\\+\\.,;\\*~ï¿½_\\s]');
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -237,7 +237,7 @@ function PrintHexBytes($string, $hex=true, $spaces=true, $htmlsafe=true) {
 		if ($hex) {
 			$returnstring .= str_pad(dechex(ord($string{$i})), 2, '0', STR_PAD_LEFT);
 		} else {
-			$returnstring .= ' '.(ereg("[\\x20-\\x7E]", $string{$i}) ? $string{$i} : '¤');
+			$returnstring .= ' '.(ereg("[\\x20-\\x7E]", $string{$i}) ? $string{$i} : 'ï¿½');
 		}
 		if ($spaces) {
 			$returnstring .= ' ';
@@ -383,67 +383,67 @@ function HTMLentitiesDecode(&$string) {
 				$HTMLentities['%'.strtoupper($hexstring)] = chr($i);
 				$HTMLentities['%'.strtolower($hexstring)] = chr($i);
 			}
-			$HTMLentities['&Aacute;'] = 'Á';
-			$HTMLentities['&Agrave;'] = 'À';
-			$HTMLentities['&Acirc;']  = 'Â';
-			$HTMLentities['&Atilde;'] = 'Ã';
-			$HTMLentities['&Aring;']  = 'Å';
-			$HTMLentities['&Auml;']   = 'Ä';
-			$HTMLentities['&AElig;']  = 'Æ';
-			$HTMLentities['&Ccedil;'] = 'Ç';
-			$HTMLentities['&Eacute;'] = 'É';
-			$HTMLentities['&Egrave;'] = 'È';
-			$HTMLentities['&Ecirc;']  = 'Ê';
-			$HTMLentities['&Euml;']   = 'Ë';
-			$HTMLentities['&Iacute;'] = 'Í';
-			$HTMLentities['&Igrave;'] = 'Ì';
-			$HTMLentities['&Icirc;']  = 'Î';
-			$HTMLentities['&Iuml;']   = 'Ï';
-			$HTMLentities['&ETH;']    = 'Ð';
-			$HTMLentities['&Ntilde;'] = 'Ñ';
-			$HTMLentities['&Oacute;'] = 'Ó';
-			$HTMLentities['&Ograve;'] = 'Ò';
-			$HTMLentities['&Ocirc;']  = 'Ô';
-			$HTMLentities['&Otilde;'] = 'Õ';
-			$HTMLentities['&Ouml;']   = 'Ö';
-			$HTMLentities['&Oslash;'] = 'Ø';
-			$HTMLentities['&Uacute;'] = 'Ú';
-			$HTMLentities['&Ugrave;'] = 'Ù';
-			$HTMLentities['&Ucirc;']  = 'Û';
-			$HTMLentities['&Uuml;']   = 'Ü';
-			$HTMLentities['&Yacute;'] = 'Ý';
-			$HTMLentities['&THORN;']  = 'Þ';
-			$HTMLentities['&szlig;']  = 'ß';
-			$HTMLentities['&aacute;'] = 'á';
-			$HTMLentities['&agrave;'] = 'à';
-			$HTMLentities['&acirc;']  = 'â';
-			$HTMLentities['&atilde;'] = 'ã';
-			$HTMLentities['&auml;']   = 'ä';
-			$HTMLentities['&aelig;']  = 'æ';
-			$HTMLentities['&ccedil;'] = 'ç';
-			$HTMLentities['&eacute;'] = 'é';
-			$HTMLentities['&egrave;'] = 'è';
-			$HTMLentities['&ecirc;']  = 'ê';
-			$HTMLentities['&euml;']   = 'ë';
-			$HTMLentities['&iacute;'] = 'í';
-			$HTMLentities['&igrave;'] = 'ì';
-			$HTMLentities['&icirc;']  = 'î';
-			$HTMLentities['&iuml;']   = 'ï';
-			$HTMLentities['&eth;']    = 'ð';
-			$HTMLentities['&ntilde;'] = 'ñ';
-			$HTMLentities['&oacute;'] = 'ó';
-			$HTMLentities['&ograve;'] = 'ò';
-			$HTMLentities['&ocirc;']  = 'ô';
-			$HTMLentities['&otilde;'] = 'õ';
-			$HTMLentities['&ouml;']   = 'ö';
-			$HTMLentities['&oslash;'] = 'ø';
-			$HTMLentities['&uacute;'] = 'ú';
-			$HTMLentities['&ugrave;'] = 'ù';
-			$HTMLentities['&ucirc;']  = 'û';
-			$HTMLentities['&uuml;']   = 'ü';
-			$HTMLentities['&yacute;'] = 'ý';
-			$HTMLentities['&thorn;']  = 'þ';
-			$HTMLentities['&yuml;']   = 'ÿ';
+			$HTMLentities['&Aacute;'] = 'ï¿½';
+			$HTMLentities['&Agrave;'] = 'ï¿½';
+			$HTMLentities['&Acirc;']  = 'ï¿½';
+			$HTMLentities['&Atilde;'] = 'ï¿½';
+			$HTMLentities['&Aring;']  = 'ï¿½';
+			$HTMLentities['&Auml;']   = 'ï¿½';
+			$HTMLentities['&AElig;']  = 'ï¿½';
+			$HTMLentities['&Ccedil;'] = 'ï¿½';
+			$HTMLentities['&Eacute;'] = 'ï¿½';
+			$HTMLentities['&Egrave;'] = 'ï¿½';
+			$HTMLentities['&Ecirc;']  = 'ï¿½';
+			$HTMLentities['&Euml;']   = 'ï¿½';
+			$HTMLentities['&Iacute;'] = 'ï¿½';
+			$HTMLentities['&Igrave;'] = 'ï¿½';
+			$HTMLentities['&Icirc;']  = 'ï¿½';
+			$HTMLentities['&Iuml;']   = 'ï¿½';
+			$HTMLentities['&ETH;']    = 'ï¿½';
+			$HTMLentities['&Ntilde;'] = 'ï¿½';
+			$HTMLentities['&Oacute;'] = 'ï¿½';
+			$HTMLentities['&Ograve;'] = 'ï¿½';
+			$HTMLentities['&Ocirc;']  = 'ï¿½';
+			$HTMLentities['&Otilde;'] = 'ï¿½';
+			$HTMLentities['&Ouml;']   = 'ï¿½';
+			$HTMLentities['&Oslash;'] = 'ï¿½';
+			$HTMLentities['&Uacute;'] = 'ï¿½';
+			$HTMLentities['&Ugrave;'] = 'ï¿½';
+			$HTMLentities['&Ucirc;']  = 'ï¿½';
+			$HTMLentities['&Uuml;']   = 'ï¿½';
+			$HTMLentities['&Yacute;'] = 'ï¿½';
+			$HTMLentities['&THORN;']  = 'ï¿½';
+			$HTMLentities['&szlig;']  = 'ï¿½';
+			$HTMLentities['&aacute;'] = 'ï¿½';
+			$HTMLentities['&agrave;'] = 'ï¿½';
+			$HTMLentities['&acirc;']  = 'ï¿½';
+			$HTMLentities['&atilde;'] = 'ï¿½';
+			$HTMLentities['&auml;']   = 'ï¿½';
+			$HTMLentities['&aelig;']  = 'ï¿½';
+			$HTMLentities['&ccedil;'] = 'ï¿½';
+			$HTMLentities['&eacute;'] = 'ï¿½';
+			$HTMLentities['&egrave;'] = 'ï¿½';
+			$HTMLentities['&ecirc;']  = 'ï¿½';
+			$HTMLentities['&euml;']   = 'ï¿½';
+			$HTMLentities['&iacute;'] = 'ï¿½';
+			$HTMLentities['&igrave;'] = 'ï¿½';
+			$HTMLentities['&icirc;']  = 'ï¿½';
+			$HTMLentities['&iuml;']   = 'ï¿½';
+			$HTMLentities['&eth;']    = 'ï¿½';
+			$HTMLentities['&ntilde;'] = 'ï¿½';
+			$HTMLentities['&oacute;'] = 'ï¿½';
+			$HTMLentities['&ograve;'] = 'ï¿½';
+			$HTMLentities['&ocirc;']  = 'ï¿½';
+			$HTMLentities['&otilde;'] = 'ï¿½';
+			$HTMLentities['&ouml;']   = 'ï¿½';
+			$HTMLentities['&oslash;'] = 'ï¿½';
+			$HTMLentities['&uacute;'] = 'ï¿½';
+			$HTMLentities['&ugrave;'] = 'ï¿½';
+			$HTMLentities['&ucirc;']  = 'ï¿½';
+			$HTMLentities['&uuml;']   = 'ï¿½';
+			$HTMLentities['&yacute;'] = 'ï¿½';
+			$HTMLentities['&thorn;']  = 'ï¿½';
+			$HTMLentities['&yuml;']   = 'ï¿½';
 		}
 		$newstring = strtr($string, $HTMLentities);
 
@@ -511,15 +511,15 @@ function QuotedOrBinaryStringDecode($string) {
 		$SubjectData = ereg_replace("\\?=[\\x0D\\x0A]*[ \\x09]*=\\?".$matches[1].'\\?'.$matches[2].'\\?', '', $matches[3]);
 		switch (strtoupper($matches[2])) {
 			case 'Q':
-				//  Subject: =?iso-8859-1?Q?vi=E0gra!?=                   // viàgra
-				//  Subject: =?iso-8859-1?Q?Test_with_=E0_special_char?=  // viàgra
+				//  Subject: =?iso-8859-1?Q?vi=E0gra!?=                   // viï¿½gra
+				//  Subject: =?iso-8859-1?Q?Test_with_=E0_special_char?=  // viï¿½gra
 				$string = QuotedEntityDecode($SubjectData);
 				break;
 
 			case 'B':
-				//  Subject: =?iso-8859-1?B?4A==?=  à
-				//  Subject: =?iso-8859-1?B?4OA=?=  àà
-				//  Subject: =?iso-8859-1?B?4Q==?=  á
+				//  Subject: =?iso-8859-1?B?4A==?=  ï¿½
+				//  Subject: =?iso-8859-1?B?4OA=?=  ï¿½ï¿½
+				//  Subject: =?iso-8859-1?B?4Q==?=  ï¿½
 				$string = safe_base64_decode($SubjectData);
 				break;
 		}
@@ -661,25 +661,25 @@ function ObfuscatedWordLists() {
 	static $Obfusnumeration = array();
 	if (count($Obfuscation) === 0) {
 		$Obfuscation = array(
-			'a' => '[aàáâãäåÀÁÂÃÄÅ@48\\^]',
-			'b' => '[bß]',
-			'c' => '[cçÇ¢©(]',
-			'd' => '[dÐð]',
-			'e' => '[eèéêëÈÉÊË€3]',
-			'f' => '[fƒ]',
+			'a' => '[aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½@48\\^]',
+			'b' => '[bï¿½]',
+			'c' => '[cï¿½Ç¢ï¿½(]',
+			'd' => '[dï¿½ï¿½]',
+			'e' => '[eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë€3]',
+			'f' => '[fï¿½]',
 			'g' => '[gq]',
-			'i' => '[iìíîïÌÍÎÏ!¡1l\\|]',
-			'l' => '[lI1!¡\\|]',
-			'n' => '[nñÑ]',
-			'o' => '[oòóôõöøÒÓÔÕÖØ0]',
-			'p' => '[pþ]',
-			'r' => '[r®]',
-			's' => '[sšzžŠŽ§\\$]',
-			't' => '[t†]',
-			'u' => '[uùúûüµÙÚÛÜ]',
-			'x' => '[x×]',
-			'y' => '[yýÿ¥ÝŸ]',
-			'z' => '[zžŽ2]',
+			'i' => '[iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!ï¿½1l\\|]',
+			'l' => '[lI1!ï¿½\\|]',
+			'n' => '[nï¿½ï¿½]',
+			'o' => '[oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½0]',
+			'p' => '[pï¿½]',
+			'r' => '[rï¿½]',
+			's' => '[sï¿½zï¿½ï¿½ï¿½ï¿½\\$]',
+			't' => '[tï¿½]',
+			'u' => '[uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]',
+			'x' => '[xï¿½]',
+			'y' => '[yï¿½ï¿½ï¿½ÝŸ]',
+			'z' => '[zï¿½ï¿½2]',
 			'.' => '[.,\\*]',
 			' ' => PHPOP3CLEAN_OBFUSPACE,
 			'-' => PHPOP3CLEAN_OBFUSPACE,
@@ -688,8 +688,8 @@ function ObfuscatedWordLists() {
 	}
 	if (count($Obfusnumeration) === 0) {
 		$Obfusnumeration = array(
-			'0' => PHPOP3CLEAN_OBFUSPACE.'*([0oòóôõöøÒÓÔÕÖØ]|zero)'.PHPOP3CLEAN_OBFUSPACE.'*',
-			'1' => PHPOP3CLEAN_OBFUSPACE.'*([1l!¡\\|]|one)'.PHPOP3CLEAN_OBFUSPACE.'*',
+			'0' => PHPOP3CLEAN_OBFUSPACE.'*([0oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]|zero)'.PHPOP3CLEAN_OBFUSPACE.'*',
+			'1' => PHPOP3CLEAN_OBFUSPACE.'*([1l!ï¿½\\|]|one)'.PHPOP3CLEAN_OBFUSPACE.'*',
 			'2' => PHPOP3CLEAN_OBFUSPACE.'*([2Z]|two)'.PHPOP3CLEAN_OBFUSPACE.'*',
 			'3' => PHPOP3CLEAN_OBFUSPACE.'*([3E]|three)'.PHPOP3CLEAN_OBFUSPACE.'*',
 			'4' => PHPOP3CLEAN_OBFUSPACE.'*([4]|four)'.PHPOP3CLEAN_OBFUSPACE.'*',
@@ -2850,7 +2850,6 @@ function ExamineMessageContents(&$header, &$MessageContents, &$WhyItsBad, &$Debu
 
 
 		if ($casinoSpam>2){
-			mail("fatman@phatman.co.uk","IS SPAM:".$ParsedHeader['subject'][0],"");
 			$ThisIsBad = true;
 			$WhyItsBad = "IsCasino: Score=".$casinoSpam;
 			$DebugMessages[] = '['.basename(__FILE__).'.'.__LINE__.'] BAD: IsCasino: Score='.$casinoSpam;
@@ -3174,7 +3173,7 @@ function linkencode($url) {
 				$query .= urlencode($var);
 			}
 		}
-		// modified version by James Heinrich <infoØsilisoftware*com> 13-Dec-2006
+		// modified version by James Heinrich <infoï¿½silisoftware*com> 13-Dec-2006
 /*		$query_array = array();
 		$query_parts = explode('&', $query);
 		$new_query = '?';
