@@ -1,0 +1,352 @@
+PHPOP3CLEAN
+---------------
+
+This is web based spam filter based on http://phpop3clean.sourceforge.net
+I have modified this to add a casino filter and also send push notifications using Prowl or Boxcar.
+
+--------------------
+What is phPOP3clean?
+--------------------
+
+phPOP3clean is a PHP-based POP3 email scanner. It's designed to be
+run as a cron job every minute or so, and to catch & delete several
+types of unwanted emails:
+
+a) malformed emails - incomplete or malformed headers, which cause
+   some POP3 servers to drop connection when the message is retrieved
+
+b) email worms - attached executable files matched against database
+   of known variant, including matching variable-length files or
+   files with internal random bytes (such as the currently-popular
+   Netsky & Beagle variants).  Zipped attachments are unzipped and
+   scanned. Password-protected zipped attachments are matched based
+   on deceptive filenames (eg: "readme.txt   .exe").
+
+c) image-based spam - attached images are matched against database of
+   known spam images to reject messages containing only an inline
+   attached image (technique of bypassing many spam filters). Images
+   with random bytes appended are also matched.
+
+d) obfuscated word spam - scans message body for obfuscated words,
+   such as "víàqrä" in place of "viagra"
+
+e) blacklisted phrase spam - scans message body for phrases (such as
+   "Securities Exchange Act of 1934" or "forward looking statements",
+   both of which are in most stock-promoting spam). Regular expression
+   matches can be used to match variations.
+
+f) blacklisted source code - scans message source for phrases known
+   to be part of exploits (eg: <script language="JScript.Encode">)
+
+g) blacklisted Received header - reject messages based on "Received"
+   header contents
+
+h) blacklisted IP spam - scans message contents for links to blacklisted
+   IP ranges (eg: 221.11.133.66/25). Links can be in HTML or plain text,
+   image/iframe src, etc.
+
+i) blacklisted domains - auto-blacklists any IPs associated with domains
+   that regularly swap IPs from a pool of zombie machines
+
+j) whitelist - "From" and "Return-Path" headers are scanned to match
+   whitelist to bypass all filtering.
+
+k) SpamAssassin support - can delete emails based on what SpamAssassin says
+
+m) DNSBL support - reject email based on headers or body containing
+   blacklisted IPs/domains
+
+
+All matching is done against MySQL tables, the contents of which are all
+user-configurable with included admin interface.
+
+Supported message encodings are: 7-bit, 8-bit, quoted-printable, base64.
+
+
+
+------------
+Requirements
+------------
+
+PHP v4.?.?
+MySQL v3.x+
+
+
+------------
+Installation
+------------
+
+Unzip to a webroot (or subdirectory of your choice) on your server.
+phPOP3clean.admin.php should be public-accessible and the /phPOP3clean/
+subdirectory should be secured (.htaccess or similar).  The two
+subdirectories ("md5imagecache" and "quarantine") should be made
+writeable (chmod 777 will work, lower permission may work depending on
+your server configuration).
+
+For speed reasons it's advisable to run phPOP3clean on the same server
+as the mailserver, but it works over POP3 so you can run phPOP3clean on
+any webserver and scan accounts on any other server(s).
+
+
+There are some values you must modify in phPOP3clean.config.php -- take a
+look at that file and it should be pretty self-explanatory.
+
+To create the MySQL tables required by phPOP3clean, simply run
+phPOP3clean.install.php and the tables will be created if required. Any
+changes to the table structures required by future versions will be
+handled by this file, so run this again after upgrading to a newer
+version of phPOP3clean.
+
+A PHPOP3CLEAN_QUARANTINE directory (default is phPOP3clean/quarantine/
+below installation directory) and within that a new directory is created
+each month where the deleted emails are stored (gzipped). This allows you
+to review deleted emails from the admin interface. You will need to
+manually clean up these directories as the months go by.
+
+
+After you've configured phPOP3clean, schedule it to run as a cron job
+every few minutes (every minute is ideal, if your server can handle the
+load.  Note: not every account is scanned every pass of phPOP3clean.php,
+the scan frequency is configurable per account). The cron job may look
+something like this:
+
+  php -q ./httpdocs/phPOP3clean/phPOP3clean.php >> /dev/null
+
+For improved security you can place the phPOP3clean files outside the web-
+accessible DOCUMENT_ROOT.
+
+Alternately, if your server does not support executing PHP files directly,
+you can put phPOP3clean into a .htaccess-secured directory and call Lynx
+to load the file:
+
+  lynx -dump -auth=user:pass http://example.com/phPOP3clean/phPOP3clean.php
+
+where user:pass is a valid username/password in the .htaccess file.
+
+
+Note: phPOP3clean is an email-filtering framework only, by default it
+will not delete much. What it will delete "out of the box" are emails:
+* with malformed headers and no body (these sometimes crash servers)
+* with very suspiciously-named attachments (eg: readme.txt.pif)
+* containing IPs or domains listed in a DNS blacklist (if configured)
+
+Beyond that, it's up to you to supply rules as to what should or should not
+be considered deletable. However, I do release "definitions" every so often
+(weekly-to-monthly) which contain banned words, phrases, code, images, etc
+that I consider generic enough to work for everyone. The creation &
+maintenance of an IP blacklist is, however, more personal so I leave that
+entirely up to you (but the DNS-BlackList does automatically catch a large
+number of undesirable emails).  To be effective, the manual IP blacklist
+must be updated daily, if not hourly. Unfortunate, but true.
+
+
+--------------
+Administration
+--------------
+
+Adminstration should be simple and intuitive with the supplied admin
+interface -- simply access phPOP3clean.admin.php and follow the directions.
+Log into the admin page either with PHPOP3CLEAN_DBUSER + PHPOP3CLEAN_DBPASS
+(full access) or a valid configured POP3 email address + password (for more
+limited access).
+
+
+--------------------------------
+Administration - Update Database
+--------------------------------
+
+Every so often new virus/image definitions and word lists will be released
+and you can easily update your installation to include these definitions.
+The updates are released as zipped SQL files, consisting of REPLACE INTO
+statements. To install the updates, simply click on "Update Database" in
+the admin interface, browse to the unzipped SQL file and click "Upload &
+Process".
+
+There are 3 SQL updates available (from SourceForge):
+  * phpop3clean_sql_nodata
+  * phpop3clean_sql_fulldata-image
+  * phpop3clean_sql_fulldata-exe
+The "nodata" version is what everybody should download and update with. It
+contains updates to the word lists, virus definitions and image definitions
+but it does not contain the actual binary data for the virus and image
+definitions. This means that you cannot see the image preview for attached
+images, or download a sample of the virus/worms in the database. The MD5
+hash will still match the unwanted email content and work fine, so there is
+no compelling reason to install anything other than the "nodata" update.
+
+The distribution of phPOP3clean does not come with any database content, so
+you will need to download and install the latest definitions before using
+phPOP3clean.
+
+
+----------------------
+Administration - Users
+----------------------
+
+You can add users to the system in two ways: the admin interface and public
+signup. The admin interface has "User admin" which should be simple to use.
+There is also phPOP3clean.demo.signup.php which provides a sample of how
+to allow users to sign up for email filtering using a publicly-accessible
+page on your site.
+
+
+-------------------------------------
+Administration - Infected Attachments
+-------------------------------------
+
+Any email attachments with executable file extensions (cmd, bat, vbs, cpl,
+hta, pif, scr, com, exe) will be matched against the database of known
+infected files. Many email worms (Netsky, Beagle, etc) append a few bytes
+of random data to the end of the emailed file, and randomize a few bytes
+in the middle of the file. phPOP3clean gets around this by truncating the
+file before the appended random data, and setting the internal randomized
+bytes to 0x00 before taking the MD5 hash of the file. The matching pattern
+string has a format similar to this:
+
+  17440|144-146;204;489
+
+where "17440" is the length to which the file should be truncated (after
+this offset is appended random data), and after the "|" comes a semicolon-
+seperated list of bytes to be set to 0x00 before hashing. The list of bytes
+can be either single bytes, or a hyphenated range of bytes.
+
+Virus/worm names in phPOP3clean are formatted to match Symantec's naming
+conventions, and links are provided to the SARC database.
+
+Any attachments with executable file extensions that do not match anything
+in the database will be saved in the database and an alert will be sent to
+the administrative email address.
+
+If you come across any infected attachments that are not caught by the
+latest phPOP3clean definitions, please forward a copy of the infected file
+to me at info@silisoftware.com and I will make sure to include it in the
+next release.
+
+
+--------------------------------
+Administration - Attached Images
+--------------------------------
+
+The attached images processing is very similar to the Infected Attachments,
+except only images are processed. An image preview is available in the
+admin interface, as well as a description field. No images are
+automatically added to the database, but you can upload images yourself.
+
+
+-----------------------------
+Administration - IP Blacklist
+-----------------------------
+
+phPOP3clean extract all URLs from emails and does a lookup on all the
+domains contained in each email, and if any of the IPs match a blacklisted
+IP then the email is deleted. To add IPs to the blacklist, click on "IPs
+Blacklist" in the admin interface, and the copy-paste as many URLs (one per
+line) into the textarea as you wish, and click "Add". The domains will be
+extracted from the URLs, and split into subdomains and a lookup performed
+on each. For example, "http://www.sub.example.com" would result in
+three lookups: "example.com", "sub.example.com", "www.sub.example.com"
+There is a DHTML display as the IP lookups are performed:
+
+
+
+Once the IPs have been looked up, their status with respect to the current
+blacklist is displayed:
+
+
+
+If the IP range is not blacklisted, a link will be provided to create a new
+blacklist (highlighted with red). If the IP is not blacklisted, but another
+IP that's very similar (ex: 127.0.0.1 vs 127.0.0.2) is in the blacklist, a
+link is provided to edit the blacklist. In the blacklist edit screen
+
+
+
+you can change the dropdown mask depth to include all the desired IPs in
+that range. 32 gives no range, and 24 matches anything in the last quarter
+of the IP. The IP range for each value is displayed immediately below
+the dropdown. The textarea description is optional, and allows you to add
+comments, for example what domains are in this range.
+
+Whitelist feature:
+You can create a whitelist exactly the same as a blacklist. Whitelisting
+an IP range does not explicitly allow anything through; all it does is
+prevent you from accidentally blacklisting a known-good IP range.
+
+
+--------------------------------------------------
+Administration - Words (clean, obfuscated, source)
+--------------------------------------------------
+
+The contents of the email is scanned for three different types of phrases:
+* "clean" phrases, which appear exactly as entered in the message body
+* "obfuscated" phrases, which are human-readable but disguised (ex: viàgra)
+* "source code" phrases, mostly to scan for exploits and phishing
+
+Clean words/phrases are scanned for in the text-only portion of the message
+body, which may include the plaintext portion of the email, as well as the
+HTML version after the HTML tags have been stripped out.
+
+Obfuscated words/phrases are also scanned for in the message body. These
+are words/phrases that have characters substituted with similar ones, or
+letter repeated, so that the word is readable to a human but doesn't match
+exactly (a common technique to try and get around spam filters). Letters
+are often substituted with accented equivalents, or similar-looking numbers
+(l->1, O->0, e->ê, f->ƒ, etc). phPOP3clean will scan for these phrases that
+match with at least 1 character substituted, but don't match exactly (so an
+email with the word "viagra" in it will not be deleted, but "víàqrä" will
+be deleted).
+
+Source Code words/phrases are matched on the HTML portion of the message
+only, without stripping HTML tags. This is used to match known exploits,
+and for phishing emails where the IP is not constant (so there's no point
+blacklisting it) but the URL structure is.
+
+For Clean and Source Code phrases, the entered phrase can either be plain
+text, or a Perl-syntax regular expression (if the box is checked). In the
+latter case, you're responsible for escaping your own regular expression
+characters.
+Note for regular expression mode:
+* Use hex characters for HTML entities in regular expressions,
+  for example "\xA0" instead of "&nbsp;"
+* Use \s instead of a normal space inside bracketed expressions
+  good: [\sa-z]+
+  bad:  [ a-z]+
+
+
+
+----------------------------------
+Administration - "Received" header
+----------------------------------
+
+This scans the "Received" header of each email and matches it against
+blacklisted domains. This filtering technique should generally be avoided
+but may be useful for some large-volume spammers that are otherwise hard to
+filter.
+
+
+----------------------------------
+Administration - Whitelist (Email)
+----------------------------------
+
+The whitelist bypasses all filtering. The whitelisted email addresses are
+matched against the "From" and "Return-Path" headers and if either matches
+the email is excluded from further scanning.
+
+
+------------------------------------
+Administration - Whitelist (Subject)
+------------------------------------
+
+The whitelist bypasses all filtering. If the whitelisted phrase is matched
+anywhere in the email subject the email is excluded from further scanning.
+
+
+-------------------------------------------
+Administration - List recently-seen domains
+-------------------------------------------
+
+This section lists all domains seen in all scanned emails (whether deleted
+or not) within the last day (configurable as PHPOP3CLEAN_KEEP_RECENT_DOM)
+and performs an IP lookup on the domains and shows if they're currently
+blacklisted or not. There is nothing to configure in this section, and it
+is not generally useful, feel free to ignore it.
